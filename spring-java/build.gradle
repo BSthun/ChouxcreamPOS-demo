@@ -1,0 +1,41 @@
+plugins {
+	id 'org.springframework.boot' version '2.5.0-SNAPSHOT'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+}
+
+group = 'com.bsthun.w.chxpos'
+version = '0.0.1-SNAPSHOT'
+
+repositories {
+	mavenCentral()
+	maven { url 'https://repo.spring.io/milestone' }
+	maven { url 'https://repo.spring.io/snapshot' }
+}
+
+dependencies {
+	// Spring Boot
+	implementation 'org.springframework.boot:spring-boot-starter'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	// Utility
+	implementation 'org.json:json:20210307'
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
+	implementation 'io.jsonwebtoken:jjwt-impl:0.11.2'
+	implementation 'io.jsonwebtoken:jjwt-gson:0.11.2'
+
+	// 3rd party library
+	implementation 'com.google.firebase:firebase-admin:7.1.1'
+	implementation 'com.warrenstrange:googleauth:1.4.0'
+
+	// Database
+	implementation 'mysql:mysql-connector-java:8.0.19'
+	implementation 'com.rethinkdb:rethinkdb-driver:2.3.3'
+
+	// Unit Testing
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+test {
+	useJUnitPlatform()
+}

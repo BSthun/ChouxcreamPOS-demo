@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 25.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 1920 1080" style="enable-background:new 0 0 1920 1080;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:url(#SVGID_1_);}
+	.st1{fill:url(#SVGID_2_);}
+	.st2{fill:url(#SVGID_3_);}
+	.st3{fill:url(#SVGID_4_);}
+</style>
+<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="1955.37" y1="1004.1487" x2="-35.3701" y2="75.8513">
+	<stop  offset="0" style="stop-color:#029400"/>
+	<stop  offset="1" style="stop-color:#7DBA10"/>
+</linearGradient>
+<rect class="st0" width="1920" height="1080"/>
+<linearGradient id="SVGID_2_" gradientUnits="userSpaceOnUse" x1="48.3632" y1="1459.4348" x2="550.5919" y2="233.6639" gradientTransform="matrix(0.5042 -0.5163 0.445 0.4346 -44.6537 826.9566)">
+	<stop  offset="0.5453" style="stop-color:#FFFFFF;stop-opacity:0"/>
+	<stop  offset="1" style="stop-color:#FFFFFF;stop-opacity:0.2"/>
+</linearGradient>
+<polygon class="st1" points="965,998.7 453,1523 1.11,1081.72 513.11,557.42 "/>
+<linearGradient id="SVGID_3_" gradientUnits="userSpaceOnUse" x1="632.0746" y1="1875.0801" x2="1189.9674" y2="513.4518" gradientTransform="matrix(0.6149 -0.6297 0.4346 0.4244 -229.5466 1032.2671)">
+	<stop  offset="0.5453" style="stop-color:#FFFFFF;stop-opacity:0"/>
+	<stop  offset="1" style="stop-color:#FFFFFF;stop-opacity:0.2"/>
+</linearGradient>
+<polygon class="st2" points="1441.64,849.7 748,1560 257.75,1081.25 951.38,370.95 "/>
+<linearGradient id="SVGID_4_" gradientUnits="userSpaceOnUse" x1="3138.2847" y1="-125.3236" x2="2156.2847" y2="-125.3236" gradientTransform="matrix(-0.834 0.5181 -0.5436 -0.8752 3671.6306 -923.2364)">
+	<stop  offset="0.5453" style="stop-color:#FFFFFF;stop-opacity:0"/>
+	<stop  offset="1" style="stop-color:#FFFFFF;stop-opacity:0.2"/>
+</linearGradient>
+<polygon class="st3" points="1756.28,5.51 1587.56,1034.54 1181.91,908.08 1606.32,0.41 "/>
+</svg>

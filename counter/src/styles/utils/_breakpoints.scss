@@ -1,0 +1,28 @@
+$screen-sm: calc(576px - 0.001px);
+$screen-md: calc(768px - 0.001px);
+$screen-lg: calc(992px - 0.001px);
+$screen-xl: calc(1200px - 0.001px);
+
+@mixin sm {
+	@media (max-width: #{$screen-sm}) {
+		@content;
+	}
+}
+
+@mixin md {
+	@media (max-width: #{$screen-md}) {
+		@content;
+	}
+}
+
+@mixin lg {
+	@media (max-width: #{$screen-lg}) {
+		@content;
+	}
+}
+
+@mixin xl {
+	@media (max-width: #{$screen-xl}) {
+		@content;
+	}
+}

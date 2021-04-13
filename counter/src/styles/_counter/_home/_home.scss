@@ -1,0 +1,7 @@
+.container {
+	max-width: 1024px;
+}
+
+.listing-griditem:not(:last-child) {
+	border-right: 1px solid #dadce0;
+}

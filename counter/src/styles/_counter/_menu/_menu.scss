@@ -1,0 +1,32 @@
+.content {
+	width: 100%;
+	height: 100%;
+
+	.fooditems {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, 316px /* 300px + 16px */);
+		grid-row-gap: 16px;
+		justify-items: center;
+		justify-content: center;
+		margin: 16px 0 0 0;
+	}
+}
+
+.MuiFab-root {
+	position: absolute;
+	bottom: 36px;
+	right: 36px;
+	padding: 0 24px;
+
+	&,
+	&:hover {
+		background-color: seagreen;
+	}
+
+	svg {
+		margin: 0 12px 0 0;
+	}
+	* {
+		color: white;
+	}
+}

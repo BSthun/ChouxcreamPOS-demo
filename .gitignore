@@ -1,0 +1,8 @@
+# Resources
+/artwork
+
+# Keys
+/git-crypt-key
+
+# Local
+.DS_Store

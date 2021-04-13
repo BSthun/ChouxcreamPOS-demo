@@ -1,0 +1,70 @@
+.banner {
+	position: relative;
+	min-height: 70vh;
+	background-image: url(../images/home/banner_bg.svg);
+	background-size: cover;
+	background-position: center;
+	padding: 72px 0 0 0;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	color: white;
+
+	@include md {
+		min-height: calc(100vh - 72px);
+	}
+
+	.container {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+
+		h1 {
+			font-size: 36px;
+			margin: 0 12px;
+
+			span {
+				font-weight: 600;
+			}
+		}
+
+		h2 {
+			margin: 18px 12px;
+			font-size: 18px;
+			line-height: 1.2;
+			max-width: 600px;
+
+			b {
+				font-weight: 600;
+			}
+		}
+
+		.mid {
+			display: none;
+			@include lg {
+				display: unset;
+			}
+		}
+
+		button {
+			margin: 6px;
+			padding: 12px 24px;
+			font-size: 16px;
+			color: #030303;
+			background-color: #f3f3f3;
+			border-radius: 30px;
+
+			&:hover {
+				background-color: darken(#f3f3f3, 12);
+			}
+		}
+	}
+
+	.scrollhint {
+		position: absolute;
+		bottom: 24px;
+	}
+}

@@ -1,0 +1,75 @@
+name: Deployment Preview CI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  counter-build:
+    name: Build Counter Frontend
+    runs-on: ubuntu-latest
+    container: node:lts
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Compile React.js optimized production build
+        run: |
+          cd ./counter
+          npm i
+          npm run sass-build
+          npm run build
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: counter-build-artifact
+          path: ./counter/build
+
+  spring-build:
+    name: Build Spring Boot Backend
+    runs-on: ubuntu-latest
+    container: gradle:jdk15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Compile Spring Boot JAR
+        run: |
+          cd ./spring-java
+          gradle build
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: spring-build-artifact
+          path: ./spring-java/build/libs/*-SNAPSHOT.jar
+
+  deploy:
+    name: Deploy To Preview Server
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    container: alpine
+    needs: [counter-build, spring-build]
+    env:
+      REMOTE_SFTP_LOGIN: ${{ secrets.REMOTE_SFTP_LOGIN }}
+      REMOTE_SSH_ARGS: ${{ secrets.REMOTE_SSH_ARGS }}
+      REMOTE_SSH_PASSWORD: ${{ secrets.REMOTE_SSH_PASSWORD }}
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          path: .
+
+      - name: Install packages
+        run: |
+          apk add openssh-client sshpass lftp
+
+      - name: Upload artifacts to server
+        run: |
+          lftp -e "set sftp:auto-confirm yes; open $REMOTE_SFTP_LOGIN; mirror -X .* -X .*/ --reverse --delete ./counter-build-artifact /mnt/counter; mput -e -O /mnt/spring ./spring-build-artifact/*-SNAPSHOT.jar; bye"
+
+      - name: Restart Spring Boot Runtime at server
+        run: |
+          sshpass -p $REMOTE_SSH_PASSWORD ssh $REMOTE_SSH_ARGS -o StrictHostKeyChecking=no "(kill -9 \$(cat /mnt/spring/ChouxcreamPOS.pid) || true) && while kill -0 \$(cat /mnt/spring/ChouxcreamPOS.pid); do sleep 1; done && nohup /mnt/spring/start.sh > /dev/null"
