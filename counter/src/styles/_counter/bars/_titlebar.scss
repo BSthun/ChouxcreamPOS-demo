@@ -1,0 +1,29 @@
+.c-counter-titlebar {
+	position: absolute;
+	top: 0;
+	right: 0;
+	left: 0;
+	height: 64px;
+	padding: 0 32px;
+
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+
+	background-color: white;
+	border-bottom: 1px solid #dadce0;
+
+	.MuiBreadcrumbs-li {
+		* {
+			font-size: 18px;
+			font-weight: 500;
+		}
+
+		a {
+			color: inherit;
+			&:hover {
+				text-decoration: underline;
+			}
+		}
+	}
+}

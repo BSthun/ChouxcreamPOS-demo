@@ -1,0 +1,8 @@
+# Resources
+/artwork
+
+# SOPS
+/spring/src/main/resources/variables.yml
+
+# Local
+.DS_Store
