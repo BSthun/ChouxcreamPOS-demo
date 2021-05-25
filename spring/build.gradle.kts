@@ -15,6 +15,7 @@ repositories {
 	mavenCentral()
 	maven { url = uri("https://repo.spring.io/milestone") }
 	maven { url = uri("https://repo.spring.io/snapshot") }
+	maven { url = uri("https://jcenter.bintray.com") }
 }
 
 dependencies {
@@ -25,7 +26,7 @@ dependencies {
 	implementation("com.goebl:david-webb:1.3.0")
 	implementation("io.jsonwebtoken:jjwt-api:0.11.2")
 	implementation("io.jsonwebtoken:jjwt-impl:0.11.2")
-	implementation("io.jsonwebtoken:jjwt-gson:0.11.2")
+	implementation("io.jsonwebtoken:jjwt-jackson:0.11.2")
 	implementation("org.json:json:20210307")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("com.warrenstrange:googleauth:1.4.0")
@@ -33,7 +34,9 @@ dependencies {
 	implementation("mysql:mysql-connector-java:8.0.24")
 	implementation("commons-validator:commons-validator:1.7")
 	implementation("commons-codec:commons-codec:1.15")
+	implementation("commons-dbcp:commons-dbcp:1.4")
 	implementation("org.apache.commons:commons-lang3:3.12.0")
+	implementation("org.funktionale:funktionale-all:1.2")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")

@@ -3,7 +3,7 @@ package com.bsthun.w.chxpos.apidemo.controller.account
 import com.bsthun.w.chxpos.apidemo.utils.GoogleRecaptchaUtil.validate
 import com.bsthun.w.chxpos.apidemo.utils.MapGenerator.failureResponse
 import com.bsthun.w.chxpos.apidemo.utils.MapGenerator.successResponse
-import com.bsthun.w.chxpos.apidemo.utils.MySqlConnector.getConnection
+import com.bsthun.w.chxpos.apidemo.utils.MySqlConnector
 import com.warrenstrange.googleauth.GoogleAuthenticator
 import org.apache.commons.codec.digest.DigestUtils
 import org.apache.commons.validator.routines.EmailValidator
@@ -19,6 +19,7 @@ class NewAccountEndpoint {
 	var googleAuthenticator = GoogleAuthenticator()
 	
 	companion object {
+		
 		private const val INVITECODE_ADMIN_HASH = "49915e0d7d4b402e3017d010bc1c0e83cac6c797d6c16e66340fe3268693a6a1"
 		private const val INVITECODE_ADMIN_HASH_CSC105 =
 			"351c1852b7e67df784da0868c3d8b0412fa0831efe8d4fcc3ac42c4d05c29cf7" // csc105admin
@@ -60,24 +61,26 @@ class NewAccountEndpoint {
 		
 		// * Database actions
 		try {
-			// Generate Google Authenticator Key
-			val googleAuthenticatorKey = googleAuthenticator.createCredentials()
-			val key = googleAuthenticatorKey.key
-			val addUserStatement =
-				getConnection().prepareStatement("INSERT INTO users (name, email, gauth, permission) VALUES (?, ?, ?, ?)")
-			addUserStatement.setString(1, name)
-			addUserStatement.setString(2, email)
-			addUserStatement.setString(3, key)
-			addUserStatement.setString(4, permission)
-			return when (addUserStatement.executeUpdate()) {
-				1 ->
-					successResponse(
-						mapOf(
-							"gauth" to "otpauth://totp/$email?secret=$key&issuer=Chouxcream%20POS"
+			MySqlConnector.connection.use { connection ->
+				// Generate Google Authenticator Key
+				val googleAuthenticatorKey = googleAuthenticator.createCredentials()
+				val key = googleAuthenticatorKey.key
+				val addUserStatement =
+					connection.prepareStatement("INSERT INTO users (name, email, gauth, permission) VALUES (?, ?, ?, ?)")
+				addUserStatement.setString(1, name)
+				addUserStatement.setString(2, email)
+				addUserStatement.setString(3, key)
+				addUserStatement.setString(4, permission)
+				return when (addUserStatement.executeUpdate()) {
+					1 ->
+						successResponse(
+							mapOf(
+								"gauth" to "otpauth://totp/$email?secret=$key&issuer=Chouxcream%20POS"
+							)
 						)
-					)
-				else ->
-					failureResponse()
+					else ->
+						failureResponse()
+				}
 			}
 		} catch (e: SQLIntegrityConstraintViolationException) {
 			return failureResponse("DUPLICATE_EMAIL")

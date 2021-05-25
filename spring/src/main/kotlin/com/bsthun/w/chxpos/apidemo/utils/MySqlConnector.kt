@@ -1,29 +1,18 @@
 package com.bsthun.w.chxpos.apidemo.utils
 
+import org.apache.commons.dbcp.BasicDataSource
 import org.slf4j.LoggerFactory
 import java.sql.Connection
-import java.sql.DriverManager
-import java.sql.SQLException
 
 object MySqlConnector {
+	private val dataSource = BasicDataSource()
 	
-	private val logger = LoggerFactory.getLogger(MySqlConnector.javaClass)
-	private var connection: Connection? = null
-	
-	fun getConnection(): Connection {
-		logger.info("Commited")
-		if (connection == null || !connection!!.isValid(200))
-			connect()
-		logger.info("Returned")
-		return connection!!
+	init {
+		dataSource.url = SecretProperties.MYSQL_URL
+		dataSource.username = SecretProperties.MYSQL_USERNAME
+		dataSource.password = SecretProperties.MYSQL_PASSWORD
 	}
 	
-	private fun connect() {
-		logger.info("Connecting to MySQL Server")
-		connection = DriverManager.getConnection(
-			SecretProperties.MYSQL_URL + "?autoReconnect=true",
-			SecretProperties.MYSQL_USERNAME,
-			SecretProperties.MYSQL_PASSWORD
-		)
-	}
+	val connection: Connection
+		get() = dataSource.connection
 }

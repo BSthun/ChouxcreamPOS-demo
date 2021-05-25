@@ -29,31 +29,32 @@ class LoginEndpoint {
 		}
 		
 		try {
-			val userStatement = MySqlConnector
-				.getConnection()
-				.prepareStatement("SELECT id, name, gauth, permission FROM users WHERE email = ?")
-			userStatement.setString(1, email)
-			val userSet = userStatement.executeQuery()
-			if (userSet.next()) {
-				// Case of user exist
-				// * Check weather TOTP code is match
-				if (googleAuthenticator.authorize(userSet.getString("gauth"), password)) {
-					val token = LoginHelper.signLogin(
-						userSet.getLong("id"),
-						email,
-						userSet.getString("name"),
-						userSet.getString("permission")
-					)
-					val cookie = Cookie("token", token)
-					cookie.path = "/"
-					response.addCookie(cookie)
-					return MapGenerator.successResponse(mapOf("token" to token))
+			MySqlConnector.connection.use { connection ->
+				val userStatement = connection
+					.prepareStatement("SELECT id, name, gauth, permission FROM users WHERE email = ?")
+				userStatement.setString(1, email)
+				val userSet = userStatement.executeQuery()
+				if (userSet.next()) {
+					// Case of user exist
+					// * Check weather TOTP code is match
+					if (googleAuthenticator.authorize(userSet.getString("gauth"), password)) {
+						val token = LoginHelper.signLogin(
+							userSet.getLong("id"),
+							email,
+							userSet.getString("name"),
+							userSet.getString("permission")
+						)
+						val cookie = Cookie("token", token)
+						cookie.path = "/"
+						response.addCookie(cookie)
+						return MapGenerator.successResponse(mapOf("token" to token))
+					} else {
+						return MapGenerator.failureResponse("INVALID_CREDENTIAL")
+					}
 				} else {
-					return MapGenerator.failureResponse("INVALID_CREDENTIAL")
+					// Case of user does not exist
+					return MapGenerator.failureResponse("USER_NOT_EXIST")
 				}
-			} else {
-				// Case of user does not exist
-				return MapGenerator.failureResponse("USER_NOT_EXIST")
 			}
 		} catch (e: SQLException) {
 			e.printStackTrace()

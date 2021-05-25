@@ -3,7 +3,7 @@ package com.bsthun.w.chxpos.apidemo.controller.menu
 import com.bsthun.w.chxpos.apidemo.utils.JwtUtil.parseToken
 import com.bsthun.w.chxpos.apidemo.utils.MapGenerator.failureResponse
 import com.bsthun.w.chxpos.apidemo.utils.MapGenerator.successResponse
-import com.bsthun.w.chxpos.apidemo.utils.MySqlConnector.getConnection
+import com.bsthun.w.chxpos.apidemo.utils.MySqlConnector
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.JwtException
 import org.springframework.web.bind.annotation.CookieValue
@@ -18,7 +18,7 @@ import javax.sql.rowset.serial.SerialBlob
 class MenuAddEndpoint {
 	
 	@PostMapping(path = ["/menus/add"])
-	fun _add(
+	fun add(
 		@CookieValue token: String,
 		@RequestParam name: String,
 		@RequestParam description: String,
@@ -44,22 +44,24 @@ class MenuAddEndpoint {
 		
 		// * Database actions
 		try {
-			val addMenuStatement = getConnection().prepareStatement(
+			MySqlConnector.connection.use { connection ->
+				val addMenuStatement = connection.prepareStatement(
 					"INSERT INTO menus (name, description, img, price, stock, category) VALUES (?, ?, ?, ?, ?, ?)"
 				)
-			addMenuStatement.setString(1, name)
-			addMenuStatement.setString(2, description)
-			val imageBytes = Base64.getDecoder().decode(image.substring(image.indexOf(",") + 1))
-			val imageBlob: Blob = SerialBlob(imageBytes)
-			addMenuStatement.setBlob(3, imageBlob)
-			addMenuStatement.setInt(4, price)
-			addMenuStatement.setInt(5, stock)
-			addMenuStatement.setString(6, category)
-			val addMenuResult = addMenuStatement.executeUpdate()
-			if (addMenuResult == 1) {
-				return successResponse()
-			} else {
-				return failureResponse("ACTION_FAILURE")
+				addMenuStatement.setString(1, name)
+				addMenuStatement.setString(2, description)
+				val imageBytes = Base64.getDecoder().decode(image.substring(image.indexOf(",") + 1))
+				val imageBlob: Blob = SerialBlob(imageBytes)
+				addMenuStatement.setBlob(3, imageBlob)
+				addMenuStatement.setInt(4, price)
+				addMenuStatement.setInt(5, stock)
+				addMenuStatement.setString(6, category)
+				val addMenuResult = addMenuStatement.executeUpdate()
+				if (addMenuResult == 1) {
+					return successResponse()
+				} else {
+					return failureResponse("ACTION_FAILURE")
+				}
 			}
 		} catch (e: Exception) {
 			e.printStackTrace()

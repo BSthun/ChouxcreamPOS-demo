@@ -3,6 +3,7 @@ package com.bsthun.w.chxpos.apidemo.controller.counter
 import com.bsthun.w.chxpos.apidemo.utils.JwtUtil.parseToken
 import com.bsthun.w.chxpos.apidemo.utils.MapGenerator.failureResponse
 import com.bsthun.w.chxpos.apidemo.utils.MapGenerator.successResponse
+import com.bsthun.w.chxpos.apidemo.utils.MySqlConnector
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.JwtException
 import org.springframework.web.bind.annotation.CookieValue
@@ -14,7 +15,7 @@ import java.sql.SQLException
 class DashboardEndpoint {
 	
 	@GetMapping(path = ["/counter/dashboard"])
-	fun _dashboardlisting(@CookieValue token: String): Map<String, Any> {
+	fun dashboard(@CookieValue token: String): Map<String, Any> {
 		// * Verify JWT
 		val claims: Claims
 		try {
@@ -26,10 +27,12 @@ class DashboardEndpoint {
 		
 		// * Actions
 		try {
-			val listings = DashboardListingsHelper.listings
-			val analytics = DashbordAnalyticsHelper.analytics
-			val orders = DashboardOrdersHelper.orders
-			return successResponse(mapOf("listings" to listings, "analytics" to analytics, "orders" to orders))
+			MySqlConnector.connection.use { connection ->
+				val listings = DashboardListingsHelper.getListings(connection)
+				val analytics = DashbordAnalyticsHelper.getAnalytics(connection)
+				val orders = DashboardOrdersHelper.getOrders(connection)
+				return successResponse(mapOf("listings" to listings, "analytics" to analytics, "orders" to orders))
+			}
 		} catch (e: SQLException) {
 			e.printStackTrace()
 			return failureResponse()

@@ -4,7 +4,7 @@ import com.bsthun.w.chxpos.apidemo.utils.GravatarUtil.getUrl
 import com.bsthun.w.chxpos.apidemo.utils.JwtUtil.parseToken
 import com.bsthun.w.chxpos.apidemo.utils.MapGenerator.failureResponse
 import com.bsthun.w.chxpos.apidemo.utils.MapGenerator.successResponse
-import com.bsthun.w.chxpos.apidemo.utils.MySqlConnector.getConnection
+import com.bsthun.w.chxpos.apidemo.utils.MySqlConnector
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.JwtException
 import org.springframework.web.bind.annotation.CookieValue
@@ -15,7 +15,7 @@ import java.sql.SQLException
 @RestController
 class UserListEndpoint {
 	@GetMapping(path = ["/users/list"])
-	fun _list(@CookieValue token: String): Map<String, Any> {
+	fun list(@CookieValue token: String): Map<String, Any> {
 		// * Verify JWT
 		val claims: Claims
 		try {
@@ -27,20 +27,22 @@ class UserListEndpoint {
 		
 		// * Database actions
 		try {
-			val userSet = getConnection().createStatement().executeQuery("SELECT * FROM users")
-			val users = ArrayList<Map<String, Any>>()
-			while (userSet.next()) {
-				users.add(
-					mapOf(
-						"id" to userSet.getLong("id"),
-						"name" to userSet.getString("name"),
-						"email" to userSet.getString("email"),
-						"permission" to userSet.getString("permission"),
-						"avatar" to getUrl(userSet.getString("email"))
+			MySqlConnector.connection.use { connection ->
+				val userSet = connection.createStatement().executeQuery("SELECT * FROM users")
+				val users = ArrayList<Map<String, Any>>()
+				while (userSet.next()) {
+					users.add(
+						mapOf(
+							"id" to userSet.getLong("id"),
+							"name" to userSet.getString("name"),
+							"email" to userSet.getString("email"),
+							"permission" to userSet.getString("permission"),
+							"avatar" to getUrl(userSet.getString("email"))
+						)
 					)
-				)
+				}
+				return successResponse(mapOf("users" to users))
 			}
-			return successResponse(mapOf("users" to users))
 		} catch (e: SQLException) {
 			return failureResponse(e)
 		}
