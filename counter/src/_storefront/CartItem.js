@@ -27,7 +27,7 @@ const CartItem = ({ id, name, price, quantity, setCarts }) => {
 				<Box display="flex" flexDirection="column">
 					<Typography variant="h6">{name}</Typography>
 					<Typography variant="body1">
-						{price} × ${quantity} = ${price * quantity}
+						{price} × ฿{quantity} = ฿{price * quantity}
 					</Typography>
 				</Box>
 			</Box>

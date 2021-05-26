@@ -7,35 +7,9 @@ import qs from "qs";
 import { FloatingContext } from "../context/FloatingContext";
 import { Link } from "react-router-dom";
 
-const SummaryColumn = ({ carts, setCarts }) => {
+const SummaryColumn = ({ carts, setCarts, place }) => {
 	const { openSnackBar } = useContext(FloatingContext);
 	const { profile } = useContext(ProfileContext);
-
-	const commit = () => {
-		const menus = carts.map((el) => el.id);
-		const quantities = carts.map((el) => el.quantity);
-
-		const total = carts.reduce((a, b) => a + b.quantity * b.price, 0);
-
-		axios
-			.post(
-				"/orders/commit",
-				qs.stringify({
-					menus: menus.join(","),
-					quantities: quantities.join(","),
-					total,
-				})
-			)
-			.then((response) => {
-				if (response.data.success) {
-					openSnackBar("Prder placed successfully!");
-					setCarts([]);
-				} else {
-					openSnackBar(response.data.error_code);
-				}
-			})
-			.catch((error) => openSnackBar(error.message));
-	};
 
 	return (
 		<Box
@@ -48,9 +22,12 @@ const SummaryColumn = ({ carts, setCarts }) => {
 				<Box padding="12px 24px" borderBottom="1px solid #dadce0">
 					<Typography variant="h6">Cart</Typography>
 				</Box>
-				{carts.map((el) => (
-					<CartItem {...el} setCarts={setCarts} />
-				))}
+				{carts.map(
+					(el) =>
+						el.quantity != 0 && (
+							<CartItem key={el.id} {...el} setCarts={setCarts} />
+						)
+				)}
 			</Box>
 			<Box
 				display="flex"
@@ -84,8 +61,8 @@ const SummaryColumn = ({ carts, setCarts }) => {
 			</Box>
 			<Grid container spacing={2} style={{ padding: "24px" }}>
 				<Grid item xs={12}>
-					<Button variant="outlined" size="large" fullWidth onClick={commit}>
-						Commit order
+					<Button variant="outlined" size="large" fullWidth onClick={place}>
+						Place order
 					</Button>
 				</Grid>
 				<Grid item xs={6}>

@@ -7,7 +7,7 @@ object GoogleRecaptchaUtil {
 		val webb = Webb.create()
 		val result = webb
 			.post("https://www.google.com/recaptcha/api/siteverify")
-			.param("secret", SecretProperties.RECAPTCHA_KEY)
+			.param("secret", SecretProperties.RECAPTCHA_SECRET)
 			.param("response", token)
 			.asJsonObject()
 			.body

@@ -4,6 +4,7 @@ import com.bsthun.w.chxpos.apidemo.utils.JwtUtil.parseToken
 import com.bsthun.w.chxpos.apidemo.utils.MapGenerator.failureResponse
 import com.bsthun.w.chxpos.apidemo.utils.MapGenerator.successResponse
 import com.bsthun.w.chxpos.apidemo.utils.MySqlConnector
+import com.bsthun.w.chxpos.apidemo.utils.ScbSandboxUtil
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.JwtException
 import org.springframework.web.bind.annotation.CookieValue
@@ -44,13 +45,13 @@ class CommitOrderEndpoint {
 				newOrderStatement.executeUpdate()
 				val resultSet = newOrderStatement.generatedKeys
 				resultSet.next()
-				val orderId = resultSet.getInt(1)
+				val orderId = resultSet.getLong(1)
 				val menusArr = menus.split(",").toTypedArray()
 				val quantitiesArr = quantities.split(",").toTypedArray()
 				for (i in menusArr.indices) {
 					val addOrderItemStatement = connection
-						.prepareStatement("INSERT INTO order_items (order_id, menu_id, quiantity) VALUES (?, ?, ?)")
-					addOrderItemStatement.setInt(1, orderId)
+						.prepareStatement("INSERT INTO order_items (order_id, menu_id, quantity) VALUES (?, ?, ?)")
+					addOrderItemStatement.setLong(1, orderId)
 					addOrderItemStatement.setInt(2, menusArr[i].toInt())
 					addOrderItemStatement.setInt(3, quantitiesArr[i].toInt())
 					addOrderItemStatement.executeUpdate()
@@ -60,7 +61,9 @@ class CommitOrderEndpoint {
 					updateStockStatement.setInt(2, menusArr[i].toInt())
 					updateStockStatement.executeUpdate()
 				}
-				return successResponse()
+				
+				val qr = ScbSandboxUtil.generateQr(total, orderId)
+				return successResponse(mapOf("qr" to qr))
 			}
 		} catch (e: Exception) {
 			e.printStackTrace()

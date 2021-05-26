@@ -165,9 +165,7 @@ const NewAccount = () => {
 					</Box>
 				</DialogContent>
 				<DialogActions>
-					<Button onClick={() => history.push("/home/login")} color="primary">
-						Login
-					</Button>
+					<Button onClick={() => history.push("/home/login")}>Login</Button>
 				</DialogActions>
 			</Dialog>
 		</Box>

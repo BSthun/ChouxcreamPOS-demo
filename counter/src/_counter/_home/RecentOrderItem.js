@@ -19,7 +19,9 @@ const RecentOrderItem = ({ id, menus, total, timestamp, biller }) => {
 				<Box display="flex" justifyContent="space-between">
 					<Box display="flex" flexDirection="column" alignItems="flex-start">
 						<Typography>{new moment(timestamp).format("LLL")}</Typography>
-						<Typography>{`${t("paid")} $${total} by ${biller}`} </Typography>
+						<Typography>
+							{`${t("paid")} ฿${total} ${t("by")} ${biller}`}{" "}
+						</Typography>
 					</Box>
 					<AvatarGroup max={4}>
 						{menus.split(",").map((el) => (

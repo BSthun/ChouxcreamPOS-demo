@@ -18,8 +18,12 @@ class SecretProperties {
 		// Json Web Token
 		var JWT_KEY: String = ""
 		
-		// Google reCaptcha key
-		var RECAPTCHA_KEY: String = ""
+		// Google ReCaptcha Key
+		var RECAPTCHA_SECRET: String = ""
+		
+		// SCB Sandbox Key
+		var SCB_SANDBOX_KEY: String = ""
+		var SCB_SANDBOX_SECRET: String = ""
 	}
 	
 	// Setters
@@ -39,7 +43,15 @@ class SecretProperties {
 		JWT_KEY = jwtKey
 	}
 	
-	fun setRecaptchaKey(recaptchaKey: String) {
-		RECAPTCHA_KEY = recaptchaKey
+	fun setRecaptchaSecret(recaptchaSecret: String) {
+		RECAPTCHA_SECRET = recaptchaSecret
+	}
+	
+	fun setScbSandboxKey(scbSandboxKey: String) {
+		SCB_SANDBOX_KEY = scbSandboxKey
+	}
+	
+	fun setScbSandboxSecret(scbSandboxSecret: String) {
+		SCB_SANDBOX_SECRET = scbSandboxSecret
 	}
 }

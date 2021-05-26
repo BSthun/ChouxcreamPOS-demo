@@ -44,38 +44,34 @@ const MenuItem = ({ id, name, description, price, stock, setCarts }) => {
 				/>
 				<CardContent className={styles.content}>
 					<Typography variant="h5">{name}</Typography>
-					<Typography variant="body1" color="textSecondary" sty>
+					<Typography variant="body1" color="textSecondary" gutterBottom>
 						{description}
 					</Typography>
 					<Typography variant="body1" gutterBottom>
 						${price} | {stock} remaining
 					</Typography>
 					<Grid container spacing={2}>
-						<Grid item xs={8}>
+						<Grid item xs={12}>
 							<TextField
+								fullWidth
 								variant="outlined"
 								margin="dense"
 								type="number"
 								value={quantity}
 								onChange={(event) =>
-									event.target.value > 0 &&
+									event.target.value >= 0 &&
 									event.target.value <= stock &&
-									setQuantity(event.target.value)
+									setQuantity(event.target.value) &
+										setCarts((carts) =>
+											carts.map((el) =>
+												el.id != id
+													? el
+													: ((el.quantity = event.target.value - 0) || true) &&
+													  el
+											)
+										)
 								}
 							/>
-						</Grid>
-						<Grid
-							item
-							xs={4}
-							style={{
-								display: "flex",
-								alignItems: "center",
-								margin: "4px 0 0 0",
-							}}
-						>
-							<Button variant="outlined" onClick={onAdd}>
-								Add
-							</Button>
 						</Grid>
 					</Grid>
 				</CardContent>
@@ -87,11 +83,11 @@ const MenuItem = ({ id, name, description, price, stock, setCarts }) => {
 const useStyles = makeStyles({
 	root: {
 		width: 300,
-		height: 370,
+		height: 380,
 	},
 
 	card: {
-		height: 370,
+		height: 380,
 		transition: "box-shadow .5s cubic-bezier(0, 0, 0.2, 1)",
 		"&:hover": {
 			boxShadow:
