@@ -35,7 +35,7 @@ class OrderListEndpoint {
 					.executeQuery(
 						"SELECT orders.id, orders.total, orders.timestamp, GROUP_CONCAT(order_items.menu_id) AS menus, users.name AS biller FROM orders " +
 								"INNER JOIN order_items ON orders.id = order_items.order_id INNER JOIN " +
-								"users ON users.id = orders.user GROUP BY orders.id "
+								"users ON users.id = orders.user GROUP BY orders.id ORDER BY orders.id DESC"
 					)
 				val orders = ArrayList<Map<String, Any>>()
 				while (orderSet.next()) {

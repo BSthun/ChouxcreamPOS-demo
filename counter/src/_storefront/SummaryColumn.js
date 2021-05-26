@@ -66,7 +66,13 @@ const SummaryColumn = ({ carts, setCarts, place }) => {
 					</Button>
 				</Grid>
 				<Grid item xs={6}>
-					<Button variant="outlined" fullWidth onClick={() => setCarts([])}>
+					<Button
+						variant="outlined"
+						fullWidth
+						onClick={() =>
+							setCarts((carts) => carts.map((el) => ({ ...el, quantity: 0 })))
+						}
+					>
 						Clear Cart
 					</Button>
 				</Grid>

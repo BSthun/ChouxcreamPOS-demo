@@ -62,8 +62,6 @@ object ScbSandboxUtil {
 				
 				accessToken = result.getJSONObject("data").getString("accessToken")
 				accessTokenExpire = result.getJSONObject("data").getLong("expiresAt")
-				
-				println(accessToken)
 			} catch (e: Exception) {
 				e.printStackTrace()
 			}
