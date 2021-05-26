@@ -165,7 +165,6 @@ const NewMenu = ({ edit }) => {
 								>
 									<option value="food">{t("food")}</option>
 									<option value="snack">{t("snack")}</option>
-									<option value="dessert">{t("dessert")}</option>
 									<option value="drink">{t("drink")}</option>
 								</TextField>
 							</Grid>
