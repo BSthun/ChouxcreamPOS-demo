@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Box, Grid } from "@material-ui/core";
+import { Box, CircularProgress, Grid } from "@material-ui/core";
 import { useTranslation } from "react-i18next";
 
 import { TitleBar } from "../bars/TitleBar";
@@ -15,7 +15,8 @@ import UsersCard from "./UsersCard";
 const Home = () => {
 	const { openSnackBar } = useContext(FloatingContext);
 	const [t] = useTranslation("counter");
-	const [dashboard, setDashboard] = useState({
+
+	/*const [dashboard, setDashboard] = useState({
 		listings: {
 			menus_total: 0,
 			menus_food: 0,
@@ -26,7 +27,8 @@ const Home = () => {
 		},
 		analytics: [],
 		orders: [],
-	});
+	});*/
+	const [dashboard, setDashboard] = useState(false);
 
 	useEffect(() => {
 		axios
@@ -57,21 +59,29 @@ const Home = () => {
 				<MarginButtomWrapper>
 					<WelcomeCard />
 				</MarginButtomWrapper>
-				<MarginButtomWrapper>
-					<ListingCard listings={dashboard.listings} />
-				</MarginButtomWrapper>
-				<Grid container spacing={3}>
-					<Grid item md={6} xs={12}>
+				{dashboard ? (
+					<>
 						<MarginButtomWrapper>
-							<RecentOrderCard orders={dashboard.orders} />
+							<ListingCard listings={dashboard.listings} />
 						</MarginButtomWrapper>
-					</Grid>
-					<Grid item md={6} xs={12}>
-						<MarginButtomWrapper>
-							<UsersCard />
-						</MarginButtomWrapper>
-					</Grid>
-				</Grid>
+						<Grid container spacing={3}>
+							<Grid item md={6} xs={12}>
+								<MarginButtomWrapper>
+									<RecentOrderCard orders={dashboard.orders} />
+								</MarginButtomWrapper>
+							</Grid>
+							<Grid item md={6} xs={12}>
+								<MarginButtomWrapper>
+									<UsersCard />
+								</MarginButtomWrapper>
+							</Grid>
+						</Grid>
+					</>
+				) : (
+					<Box display="flex" justifyContent="center" paddingTop="20px">
+						<CircularProgress />
+					</Box>
+				)}
 			</Box>
 		</div>
 	);

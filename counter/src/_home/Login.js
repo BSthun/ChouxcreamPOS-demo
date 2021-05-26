@@ -6,6 +6,7 @@ import {
 	CardHeader,
 	Divider,
 	Grid,
+	LinearProgress,
 	TextField,
 	Typography,
 } from "@material-ui/core";
@@ -24,11 +25,14 @@ const Login = () => {
 	const history = useHistory();
 	const { openSnackBar } = useContext(FloatingContext);
 	const { reload } = useContext(ProfileContext);
+
 	const [info, setInfo] = useState({
 		email: "",
 		password: "",
 		recaptcha: "",
 	});
+	const [loading, setLoading] = useState(false);
+
 	const recaptchaRef = createRef();
 
 	const onRecaptchaChange = (value) => {
@@ -41,6 +45,7 @@ const Login = () => {
 	};
 
 	const onLogin = () => {
+		setLoading(true);
 		recaptchaRef.current.reset();
 		axios
 			.post("/account/login", qs.stringify(info))
@@ -54,7 +59,8 @@ const Login = () => {
 					openSnackBar(response.data.error_code);
 				}
 			})
-			.catch((error) => openSnackBar(error.message));
+			.catch((error) => openSnackBar(error.message))
+			.finally(() => setLoading(false));
 	};
 
 	return (
@@ -105,7 +111,12 @@ const Login = () => {
 							/>
 						</Grid>
 						<Grid item xs={12}>
-							<Button variant="outlined" fullWidth onClick={onLogin}>
+							<Button
+								variant="outlined"
+								fullWidth
+								onClick={onLogin}
+								disabled={loading}
+							>
 								Login
 							</Button>
 						</Grid>
@@ -117,6 +128,7 @@ const Login = () => {
 						</Grid>
 					</Grid>
 				</CardContent>
+				{loading && <LinearProgress />}
 			</Card>
 		</Box>
 	);

@@ -11,6 +11,7 @@ import {
 	DialogTitle,
 	Divider,
 	Grid,
+	LinearProgress,
 	TextField,
 	Typography,
 } from "@material-ui/core";
@@ -25,6 +26,7 @@ import axios from "../utils/instance/axios";
 const NewAccount = () => {
 	const history = useHistory();
 	const { openSnackBar } = useContext(FloatingContext);
+
 	const [info, setInfo] = useState({
 		name: "",
 		email: "",
@@ -32,6 +34,8 @@ const NewAccount = () => {
 		recaptcha: "",
 	});
 	const [registered, setRegistered] = useState(false);
+	const [loading, setLoading] = useState(false);
+
 	const recaptchaRef = createRef();
 
 	const onRecaptchaChange = (value) => {
@@ -44,6 +48,7 @@ const NewAccount = () => {
 	};
 
 	const onCreateAccount = () => {
+		setLoading(true);
 		recaptchaRef.current.reset();
 		axios
 			.post("/account/newaccount", qs.stringify(info))
@@ -55,7 +60,8 @@ const NewAccount = () => {
 					openSnackBar(response.data.error_code);
 				}
 			})
-			.catch((error) => openSnackBar(error.message));
+			.catch((error) => openSnackBar(error.message))
+			.finally(() => setLoading(false));
 	};
 
 	return (
@@ -118,7 +124,12 @@ const NewAccount = () => {
 							/>
 						</Grid>
 						<Grid item xs={12}>
-							<Button variant="outlined" fullWidth onClick={onCreateAccount}>
+							<Button
+								variant="outlined"
+								fullWidth
+								onClick={onCreateAccount}
+								disabled={loading}
+							>
 								Create account
 							</Button>
 						</Grid>
@@ -135,6 +146,7 @@ const NewAccount = () => {
 						</Grid>
 					</Grid>
 				</CardContent>
+				{loading && <LinearProgress />}
 			</Card>
 
 			<Dialog open={registered}>

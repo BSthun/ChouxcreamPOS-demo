@@ -3,14 +3,12 @@ package com.bsthun.w.chxpos.apidemo.controller.order
 import com.bsthun.w.chxpos.apidemo.utils.JwtUtil.parseToken
 import com.bsthun.w.chxpos.apidemo.utils.MapGenerator.failureResponse
 import com.bsthun.w.chxpos.apidemo.utils.MapGenerator.successResponse
-import com.bsthun.w.chxpos.apidemo.utils.MySqlConnector.connection
+import com.bsthun.w.chxpos.apidemo.utils.MySqlConnector
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.JwtException
-import org.funktionale.tries.Try
 import org.springframework.web.bind.annotation.CookieValue
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
-import java.io.Closeable
 import java.sql.SQLException
 
 @RestController
@@ -31,11 +29,13 @@ class OrderListEndpoint {
 		
 		// * Database action
 		return try {
-			connection.use { connection ->
+			MySqlConnector.connection.use { connection ->
 				val orderSet = connection
 					.createStatement()
 					.executeQuery(
-						"SELECT orders.id, orders.total, orders.timestamp, GROUP_CONCAT(order_items.menu_id) AS menus, users.name AS biller FROM orders INNER JOIN order_items ON orders.id = order_items.order_id INNER JOIN users ON users.id = orders.user GROUP BY orders.id "
+						"SELECT orders.id, orders.total, orders.timestamp, GROUP_CONCAT(order_items.menu_id) AS menus, users.name AS biller FROM orders " +
+								"INNER JOIN order_items ON orders.id = order_items.order_id INNER JOIN " +
+								"users ON users.id = orders.user GROUP BY orders.id "
 					)
 				val orders = ArrayList<Map<String, Any>>()
 				while (orderSet.next()) {

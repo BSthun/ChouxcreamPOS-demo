@@ -14,6 +14,7 @@ import {
 	Input,
 	InputAdornment,
 	InputLabel,
+	LinearProgress,
 	makeStyles,
 	TextField,
 } from "@material-ui/core";
@@ -39,6 +40,7 @@ const NewMenu = ({ edit }) => {
 	const history = useHistory();
 	const [t] = useTranslation("counter");
 	const { openSnackBar } = useContext(FloatingContext);
+	const [loading, setLoading] = useState(false);
 	const [form, setForm] = useState({
 		id: edit?.id,
 		name: edit ? edit.name : "",
@@ -56,6 +58,7 @@ const NewMenu = ({ edit }) => {
 	};
 
 	const onSave = () => {
+		setLoading(true);
 		axios
 			.post(edit ? "/menus/edit" : "/menus/add", qs.stringify(form))
 			.then((response) => {
@@ -68,7 +71,10 @@ const NewMenu = ({ edit }) => {
 					openSnackBar(response.data.error_code);
 				}
 			})
-			.catch((error) => openSnackBar(error.message));
+			.catch((error) => openSnackBar(error.message))
+			.finally(() => {
+				setLoading(false);
+			});
 	};
 
 	return (
@@ -158,8 +164,9 @@ const NewMenu = ({ edit }) => {
 									}
 								>
 									<option value="food">{t("food")}</option>
-									<option value="drink">{t("drink")}</option>
 									<option value="snack">{t("snack")}</option>
+									<option value="dessert">{t("dessert")}</option>
+									<option value="drink">{t("drink")}</option>
 								</TextField>
 							</Grid>
 							<Grid
@@ -206,12 +213,15 @@ const NewMenu = ({ edit }) => {
 							size="large"
 							style={{ margin: "0 0 0 auto" }}
 							onClick={onSave}
+							disabled={loading}
 						>
 							<FontAwesomeIcon style={{ fontSize: 15 }} icon={faSave} /> &nbsp;
 							&nbsp;
 							{t("save")}
 						</Button>
 					</CardActions>
+
+					{loading && <LinearProgress />}
 				</Card>
 			</Box>
 		</div>
